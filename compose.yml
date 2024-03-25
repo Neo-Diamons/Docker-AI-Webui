@@ -1,0 +1,61 @@
+name: ollama
+version: "3.8"
+
+services:
+  stable-diffusion:
+    build:
+      context: stable-diffusion
+      dockerfile: Dockerfile
+    container_name: stable-diffusion
+    volumes:
+      - stable-diffusion:/root/.stable-diffusion
+    ports:
+      - 7860:7860
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  ollama:
+    build:
+      context: ollama
+      dockerfile: Dockerfile
+    container_name: ollama
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - 11434:11434
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  open-webui:
+    build:
+      context: open-webui
+      dockerfile: Dockerfile
+    container_name: open-webui
+    ports:
+      - 3000:8080
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - open-webui:/app/backend/data
+    environment:
+      - DEFAULT_MODELS=mistral:latest
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - AUTOMATIC1111_BASE_URL=http://stable-diffusion:7860
+    restart: unless-stopped
+
+volumes:
+  stable-diffusion: {}
+  ollama: {}
+  open-webui: {}
