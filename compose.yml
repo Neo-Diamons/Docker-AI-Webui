@@ -1,5 +1,4 @@
-name: ollama
-version: "3.8"
+name: ai
 
 services:
   stable-diffusion:
@@ -8,7 +7,9 @@ services:
       dockerfile: Dockerfile
     container_name: stable-diffusion
     volumes:
-      - stable-diffusion:/root/.stable-diffusion
+      - ./stable-diffusion/models:/home/myuser/stable-diffusion-webui/models
+      - ./stable-diffusion/outputs:/home/myuser/stable-diffusion-webui/outputs
+      - stable-diffusion:/home/myuser/stable-diffusion-webui
     ports:
       - 7860:7860
     restart: unless-stopped
@@ -56,6 +57,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  stable-diffusion: {}
-  ollama: {}
-  open-webui: {}
+  stable-diffusion:
+  ollama:
+  open-webui:
