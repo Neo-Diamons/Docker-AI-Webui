@@ -9,7 +9,7 @@ services:
     volumes:
       - ./stable-diffusion/models:/home/myuser/stable-diffusion-webui/models
       - ./stable-diffusion/outputs:/home/myuser/stable-diffusion-webui/outputs
-      - stable-diffusion:/home/myuser/stable-diffusion-webui
+      - stable-diffusion-repositories:/home/myuser/stable-diffusion-webui/repositories
     ports:
       - 7860:7860
     restart: unless-stopped
@@ -57,6 +57,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  stable-diffusion:
+  stable-diffusion-repositories:
   ollama:
   open-webui:
