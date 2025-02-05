@@ -22,9 +22,7 @@ services:
               capabilities: [gpu]
 
   ollama:
-    build:
-      context: ollama
-      dockerfile: Dockerfile
+    image: ollama/ollama:0.5.7
     container_name: ollama
     volumes:
       - ollama:/root/.ollama
@@ -40,9 +38,7 @@ services:
               capabilities: [gpu]
 
   open-webui:
-    build:
-      context: open-webui
-      dockerfile: Dockerfile
+    image:  ghcr.io/open-webui/open-webui:0.5.7
     container_name: open-webui
     ports:
       - 3000:8080
@@ -51,10 +47,17 @@ services:
     volumes:
       - open-webui:/app/backend/data
     environment:
-      - DEFAULT_MODELS=mistral:latest
+      - ENABLE_SIGNUP=true
       - OLLAMA_BASE_URL=http://ollama:11434
+      - ENABLE_IMAGE_GENERATION=true
+      - IMAGE_GENERATION_ENGINE=automatic1111
       - AUTOMATIC1111_BASE_URL=http://stable-diffusion:7860
+      - IMAGE_GENERATION_ENGINE=v1-5-pruned-emaonly.safetensors
+      - IMAGE_STEPS=20
     restart: unless-stopped
+    depends_on:
+      - stable-diffusion
+      - ollama
 
 volumes:
   stable-diffusion-repositories:
